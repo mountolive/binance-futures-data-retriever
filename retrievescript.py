@@ -20,7 +20,7 @@ parser.add_argument('--end',
                     default=later.isoformat())
 parser.add_argument('--timeframe',
                     help='The timeframe for the candles: 1m or 3m or 5m...', default='1m')
-parser.add_argument('--limit', help='Limit of candles to retrieve', default=None)
+parser.add_argument('--limit', help='Limit of candles to retrieve', default=1500)
 
 args = parser.parse_args()
 

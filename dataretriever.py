@@ -59,11 +59,27 @@ class DataRetriever():
         if not (self.start_stamp and self.end_stamp and self.start_date and self.end_date):
             log.error('Something went wrong when setting the basic date/time params')
             return
-        print(self.start_stamp, self.end_stamp)
-        data = self.client.get_candlestick_data(symbol=pair, interval=timeframe,
-                                                startTime=self.start_stamp,
-                                                endTime=self.end_stamp,
-                                                limit=limit)
+        data: List[Candlestick] = []
+        data += self.client.get_candlestick_data(symbol=pair, interval=timeframe,
+                                                 startTime=self.start_stamp,
+                                                 endTime=self.end_stamp,
+                                                 limit=limit)
+        # We'll keep asking for more data as long we don't retrieve the entire
+        # time margin we passed
+        if len(data) > 1:
+            last_result = data[-1]
+            last_stamp = last_result.openTime
+            partial_result: List[Candlestick] = data
+            # Means the last candle is not yet our passed end time
+            # Binance's api returns the same last one if the last
+            # timestamp is too close
+            while last_stamp < self.end_stamp and len(partial_result) > 1:
+                partial_result = self.client.get_candlestick_data(symbol=pair, interval=timeframe,
+                                                                  startTime=last_stamp,
+                                                                  endTime=self.end_stamp,
+                                                                  limit=limit)
+                if len(partial_result) > 0 and partial_result[0].openTime != data[-1].openTime:
+                    data += partial_result
         self.data = data
         return CandlestickMeta(data=data, pair=pair, start=self.start_date.isoformat(),
                                end=self.end_date.isoformat(), limit=limit,
