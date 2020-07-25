@@ -18,6 +18,9 @@ Install requirements
 
 # Run
 
+The data would be saved in the same directory of the script, inside
+a newly created `data` directory
+
 It's necessary to have set in the environment the env variables
 `BINANCE_API_KEY` and `BINANCE_SECRET_KEY`
 
