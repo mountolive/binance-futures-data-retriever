@@ -18,7 +18,18 @@ Install requirements
 
 # Run
 
+It's necessary to have set in the environment the env variables
+`BINANCE_API_KEY` and `BINANCE_SECRET_KEY`
+
+Basic run:
+
 `python retrievescript.py`
+
+Example of complete run:
+
+`BINANCE_API_KEY='test' BINANCE_SECRET_KEY='test' python retrievescript.py --start=2020-07-23 --end=2020-07-24`
+
+`start` and `end` can be also time, but both as time or date (or datetime) iso format must be used
 
 It receives different flags for the data retrieval:
 
