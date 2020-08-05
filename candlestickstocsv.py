@@ -1,7 +1,8 @@
 import csv
 import logging
-from typing import List
 import os
+import platform
+from typing import List
 
 from binance_f.model import Candlestick
 
@@ -45,7 +46,7 @@ class CandlesticksToCsv():
         The data that would be converted to a csv file
         along with its metadata
     '''
-    DATA_DIR = './data'
+    DATA_DIR = '.\\data' if platform.system() == 'Windows' else './data'
     def __init__(self, data: CandlestickMeta=None):
         self.log = logging.getLogger(name='CandlestickToCsv')
         self.headers: List[str] = []
@@ -73,8 +74,9 @@ class CandlesticksToCsv():
         self.data: CandlestickMeta = data
         self.filename = '{pair}_{start}_{end}_{limit}_{timeframe}.csv'.format(
                    pair=self.data.pair,
-                   start=self.data.start,
-                   end=self.data.end,
+                   # : is not admited in windows
+                   start='_'.join(self.data.start.split(':')),
+                   end='_'.join(self.data.end.split(':')),
                    limit=self.data.limit,
                    timeframe=self.data.timeframe
                 )
@@ -85,11 +87,13 @@ class CandlesticksToCsv():
         into a csv file. Depending on the parameters of that same data,
         for the naming of the file.
         '''
-        with open('%s/%s' % (self.DATA_DIR, self.filename), 'w+') as csvfile:
+        is_windows = platform.system() == 'Windows'
+        end_line = '\r\n' if is_windows else '\n'
+        dir_str: str = '%s\\%s' if is_windows else '%s/%s'
+        with open(dir_str % (self.DATA_DIR, self.filename), 'w+') as csvfile:
             self.log.debug('Writing to file %s' % csvfile)
             writer = csv.writer(csvfile, delimiter=';',
-                                lineterminator='\n')
-            # writing the headers
+                                lineterminator=end_line)
             self.log.debug('Writing headers')
             writer.writerow(self.headers)
             for candle in self.data.data:

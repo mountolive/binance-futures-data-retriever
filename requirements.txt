@@ -1,5 +1,5 @@
 APScheduler==3.6.3
-binance-futures==1.1.0
+git+https://github.com/Binance-docs/Binance_Futures_python@master
 certifi==2020.6.20
 chardet==3.0.4
 idna==2.10

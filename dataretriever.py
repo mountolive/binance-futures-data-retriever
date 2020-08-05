@@ -23,8 +23,10 @@ class DataRetriever():
                 '3d', '1w', '1M',
             ]
     def __init__(self):
-        api_key: str = os.environ['BINANCE_API_KEY']
-        secret_key: str = os.environ['BINANCE_SECRET_KEY']
+        api: str = 'BINANCE_API_KEY'
+        secret: str = 'BINANCE_SECRET_KEY'
+        api_key: str = os.environ[api] if api in os.environ else 'test'
+        secret_key: str = os.environ[secret] if secret in os.environ else 'test'
         self.client = RequestClient(api_key=api_key, secret_key=secret_key)
         self.log = logging.getLogger(name='DataRetriever')
 
@@ -80,6 +82,7 @@ class DataRetriever():
                                                                   limit=limit)
                 if len(partial_result) > 0 and partial_result[0].openTime != data[-1].openTime:
                     data += partial_result
+                last_stamp = partial_result[-1].openTime
         self.data = data
         return CandlestickMeta(data=data, pair=pair, start=self.start_date.isoformat(),
                                end=self.end_date.isoformat(), limit=limit,

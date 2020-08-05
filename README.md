@@ -14,7 +14,7 @@ It's recommended to use a virtual environment, through
 
 Install requirements
 
-`pip install requirements.txt`
+`pip install -r requirements.txt`
 
 # Run
 
@@ -22,7 +22,7 @@ The data would be saved in the same directory of the script, inside
 a newly created `data` directory
 
 It's necessary to have set in the environment the env variables
-`BINANCE_API_KEY` and `BINANCE_SECRET_KEY`
+`BINANCE_API_KEY` and `BINANCE_SECRET_KEY` (if not set, they will be set to `test`)
 
 Basic run:
 
