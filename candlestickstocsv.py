@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 import logging
 import os
 import platform
@@ -47,6 +48,7 @@ class CandlesticksToCsv():
         along with its metadata
     '''
     DATA_DIR = '.\\data' if platform.system() == 'Windows' else './data'
+    DATE_FIELDS = ['openTime', 'closeTime']
     def __init__(self, data: CandlestickMeta=None):
         self.log = logging.getLogger(name='CandlestickToCsv')
         self.headers: List[str] = []
@@ -102,7 +104,12 @@ class CandlesticksToCsv():
     def _candlestick_to_csv_line(self, candle: Candlestick) -> List[str]:
         line: List[str] = []
         for attr in self.headers:
-            line.append(getattr(candle, attr, ''))
+            value = getattr(candle, attr, '')
+            if attr in self.DATE_FIELDS:
+                value = datetime.isoformat(datetime.fromtimestamp(
+                          value / 1000
+                        ))
+            line.append(value)
         return line
 
 
